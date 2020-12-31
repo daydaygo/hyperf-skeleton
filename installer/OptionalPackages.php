@@ -5,11 +5,10 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
- * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace Installer;
 
 use Composer\Composer;
@@ -253,7 +252,7 @@ class OptionalPackages
      */
     public function processAnswer(array $question, $answer): bool
     {
-        if (is_numeric($answer) && isset($question['options'][$answer])) {
+        if (isset($question['options'][$answer])) {
             // Add packages to install
             if (isset($question['options'][$answer]['packages'])) {
                 foreach ($question['options'][$answer]['packages'] as $packageName) {
@@ -399,7 +398,7 @@ class OptionalPackages
         $defaultText = $defaultOption;
         foreach ($question['options'] as $key => $option) {
             $defaultText = ($key === $defaultOption) ? $option['name'] : $defaultText;
-            $ask[] = sprintf("  [<comment>%d</comment>] %s\n", $key, $option['name']);
+            $ask[] = sprintf("  [<comment>%s</comment>] %s\n", $key, $option['name']);
         }
         if ($question['required'] !== true) {
             $ask[] = "  [<comment>n</comment>] None of the above\n";
@@ -420,6 +419,10 @@ class OptionalPackages
             // Handle numeric options
             if (is_numeric($answer) && isset($question['options'][(int) $answer])) {
                 return (int) $answer;
+            }
+            // Handle string options
+            if (isset($question['options'][$answer])) {
+                return $answer;
             }
             // Search for package
             if ($question['custom-package'] === true && preg_match(self::PACKAGE_REGEX, $answer, $match)) {
