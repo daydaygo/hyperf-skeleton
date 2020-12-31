@@ -11,8 +11,17 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\Redis\Redis;
+
 class IndexController extends AbstractController
 {
+    /**
+     * @Inject
+     * @var Redis
+     */
+    public $redis;
+
     public function index()
     {
         $user = $this->request->input('user', 'Hyperf');
@@ -22,5 +31,10 @@ class IndexController extends AbstractController
             'method' => $method,
             'message' => "Hello {$user}.",
         ];
+    }
+
+    public function t()
+    {
+        return $this->redis->get('foo');
     }
 }
